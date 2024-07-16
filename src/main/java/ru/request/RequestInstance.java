@@ -3,6 +3,7 @@ package ru.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class RequestInstance {
     public String isoCurrencyCode; // +Код валюты Трехсимвольный код валюты счета в стандарте ISO
     public String urgencyCode; // +Код срочности договора Всегда “00”
     public Integer referenceCode; // -Код точки продаж идентификатор точки продаж, где можно осуществлять операции внесения
-    List<AdditionalPropertiesVip> additionalPropertiesVips;
-    List<InstanceArrangement> instanceArrangements;
+    List<AdditionalPropertiesVip> additionalPropertiesVips = new ArrayList<>();
+    List<InstanceArrangement> instanceArrangements = new ArrayList<>();
 }
 
