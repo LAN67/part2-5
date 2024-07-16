@@ -1,16 +1,13 @@
 package ru.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "account_pool")
 public class AccountPool {
@@ -27,8 +24,6 @@ public class AccountPool {
     private String priorityCode; //priority_code VARCHAR(30),
     @Column(name = "registry_type_code")
     private String registryTypeCode; //registry_type_code VARCHAR(50)
-    @OneToMany(mappedBy = "accountPool", fetch=FetchType.EAGER)
-    //@JoinColumn(name = "account_pool_id")
+    @OneToMany(mappedBy = "accountPool", fetch=FetchType.LAZY)
     private List<Account> account;
-
 }

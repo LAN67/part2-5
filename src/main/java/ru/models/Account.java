@@ -1,14 +1,11 @@
 package ru.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "account")
 public class Account {
@@ -21,9 +18,8 @@ public class Account {
     private String accountNumber; // account_number VARCHAR(25),`
     @Column
     private Boolean bussy;// bussy BOOLEAN
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name="account_pool_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_pool_id", referencedColumnName = "id")
     private AccountPool accountPool;
-
 }
+

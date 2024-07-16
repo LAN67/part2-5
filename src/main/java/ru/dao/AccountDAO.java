@@ -22,7 +22,8 @@ public class AccountDAO {
 
         Configuration configuration = new Configuration()
                 .addAnnotatedClass(TppRefProductRegisterType.class)
-                .addAnnotatedClass(AccountPool.class);
+                .addAnnotatedClass(AccountPool.class)
+                .addAnnotatedClass(Account.class);
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         try (sessionFactory) {
             Session session = sessionFactory.openSession();
@@ -42,15 +43,15 @@ public class AccountDAO {
             List<AccountPool> ap = session.createQuery(
                             "FROM AccountPool WHERE branchCode='"+acc.branchCode +"' and currencyCode='"+ acc.currencyCode+"' and mdmCode='"+ acc.mdmCode+"' and priorityCode='"+ acc.priorityCode+"' and registryTypeCode='"+ acc.registryTypeCode+"'", AccountPool.class)
                     .getResultList();
-            System.out.println("====================="+ap.size());
-//            for(AccountPool one : ap){
-//                System.out.println("1===================================");
-//                System.out.println(one);
-//                for(Account one1 : one.getAccount()){
-//                    System.out.println("2===================================");
-//                    System.out.println(one1);
-//                }
-//            }
+            System.out.println("size="+ap.size());
+            for(AccountPool one : ap){
+                System.out.println("1===================================");
+                System.out.println(one);
+                for(Account one1 : one.getAccount()){
+                    System.out.println("2===================================");
+                    System.out.println(one1);
+                }
+            }
         }
         return ResponseEntity
                 .status(HttpStatus.OK)
