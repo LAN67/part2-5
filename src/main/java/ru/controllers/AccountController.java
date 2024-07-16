@@ -1,6 +1,5 @@
 package ru.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,50 +7,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.dao.CheckProductReqister;
+import ru.dao.AccountDAO;
+import ru.models.TppRefProductRegisterType;
 import ru.request.RequestAccount;
 import ru.verification.AccountVerification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class AccountController {
 
     @GetMapping("/corporate-settlement-account/create")
     public ResponseEntity<String> create(@RequestBody RequestAccount acc) {
+        ResponseEntity<String> response;
 //        @Autowired ??? '@Autowired' not applicable to local variable
         AccountVerification accountVerification = new AccountVerification();
 //        @Autowired ??? '@Autowired' not applicable to local variable
         CheckProductReqister checkProductReqister = new CheckProductReqister();
-        String str;
+        AccountDAO accountDAO = new AccountDAO();
 
         //Шаг 1. Проверка Request.Body на обязательность.
-        str = accountVerification.verification(acc);
-        if (str != null) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.TEXT_PLAIN)
-                    .body(str);
+        response = accountVerification.verification(acc);
+        if (response != null) {
+            return response;
         }
 
         //Шаг 2. Проверка таблицы ПР (таблица tpp_product_register) на дубли.
-        str = checkProductReqister.checkProductReqister(acc);
-        if (str != null) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.TEXT_PLAIN)
-                    .body(str);
+        response = checkProductReqister.check(acc);
+        if (response != null) {
+            return response;
         }
 
-
-
-
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{\n" +
-                        "\"data\": {\n" +
-                        "\"accountId\": \"string\"\n" +
-                        "}\n" +
-                        "}\n");
+        //Шаг 3 и 4.
+        return accountDAO.create(acc);
     }
 }
 
