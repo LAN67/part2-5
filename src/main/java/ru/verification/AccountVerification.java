@@ -9,15 +9,16 @@ import ru.request.RequestAccount;
 public class AccountVerification {
     public ResponseEntity<String> verification(RequestAccount acc){
         if(acc.instanceId == null)
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.TEXT_PLAIN)
-                    .body("Имя обязательного параметра instanceId не заполнено.");
+            return createResponse("instanceId");
         if(acc.registryTypeCode == null)
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.TEXT_PLAIN)
-                    .body("Имя обязательного параметра accountType не заполнено.");
+            return createResponse("registryTypeCode");
         return null;
+    }
+
+    private ResponseEntity<String> createResponse(String name){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.TEXT_PLAIN)
+                .body("Имя обязательного параметра " + name + " не заполнено.");
     }
 }

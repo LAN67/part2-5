@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.dao.CheckProductReqister;
 import ru.dao.AccountDAO;
 import ru.request.RequestAccount;
 import ru.verification.AccountVerification;
@@ -18,8 +17,6 @@ public class AccountController {
         ResponseEntity<String> response;
 //        @Autowired ??? '@Autowired' not applicable to local variable
         AccountVerification accountVerification = new AccountVerification();
-//        @Autowired ??? '@Autowired' not applicable to local variable
-        CheckProductReqister checkProductReqister = new CheckProductReqister();
         AccountDAO accountDAO = new AccountDAO();
 
         //Шаг 1. Проверка Request.Body на обязательность.
@@ -29,7 +26,7 @@ public class AccountController {
         }
 
         //Шаг 2. Проверка таблицы ПР (таблица tpp_product_register) на дубли.
-        response = checkProductReqister.check(acc);
+        response = accountDAO.check(acc);
         if (response != null) {
             return response;
         }
@@ -40,19 +37,17 @@ public class AccountController {
 }
 
 /*
-
 {
-    "instanceId": null,
-    "registryTypeCode": null,
-    "accountType": null,
-    "currencyCode": null,
-    "branchCode": null,
-    "priorityCode": null,
-    "mdmCode": null,
+    "instanceId": 1,
+    "registryTypeCode": "03.012.002_47533_ComSoLd",
+    "accountType": "Клиентский",
+    "currencyCode": "800",
+    "branchCode": "0022",
+    "priorityCode": "00",
+    "mdmCode": "15",
     "clientCode": null,
     "trainRegion": null,
     "counter": null,
     "salesCode": null
 }
-
- */
+*/
