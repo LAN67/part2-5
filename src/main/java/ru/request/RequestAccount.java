@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestAccount {
-    public Integer instanceId; // +Идентификатор экземпляра продукта Идентификатор ЭП, к которому привязывается продуктовый регистр. sequence
+    public Long instanceId; // +Идентификатор экземпляра продукта Идентификатор ЭП, к которому привязывается продуктовый регистр. sequence
     public String registryTypeCode; // -Тип регистра Тип создаваемого продуктового регистра
     public String accountType; // -Тип счета Клиентский или внутрибанковский
     public String currencyCode; // -Код валюты 3-х значный код валюты
