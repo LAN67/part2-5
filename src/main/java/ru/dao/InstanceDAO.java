@@ -1,5 +1,6 @@
 package ru.dao;
 
+import jakarta.persistence.Column;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -19,6 +20,9 @@ public class InstanceDAO {
     public ResponseEntity<String> createProduct(RequestInstance inst) {
         List<TppRefProductClass> productClass;
         FindAccountNumber findAccountNumber = new FindAccountNumber();
+        List<TppProduct> product;
+        AtomicReference<String> str = new AtomicReference<>("");
+        String strTemp;
 
         Configuration configuration = new Configuration()
                 .addAnnotatedClass(TppProduct.class)
@@ -115,10 +119,10 @@ public class InstanceDAO {
                 break;
             }
             //Шаг 2.1. Проверка таблицы ЭП (tpp_product) на существование ЭП.
-            List<TppProduct> pr = session.createQuery(
+            product = session.createQuery(
                             "FROM TppProduct WHERE id=" + inst.instanceId, TppProduct.class)
                     .getResultList();
-            if (pr.isEmpty()) {
+            if (product.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
                         .contentType(MediaType.TEXT_PLAIN)
@@ -138,32 +142,67 @@ public class InstanceDAO {
                 }
             }
             //Шаг 8.
+            for (InstanceArrangement one : inst.instanceArrangements) {
+                for (TppProduct prod : product) {
+                    session.beginTransaction();
+                    Agreement agreement = new Agreement();
+                    agreement.setId(null); //    id serial PRIMARY KEY,
+                    agreement.setProductID(prod.getId()); //    product_id integer,
+                    agreement.setGeneralAgreementID(one.generalAgreementId); //    general_agreement_id VARCHAR(50),
+                    agreement.setSupplementaryAgreementID(one.supplementaryAgreementId); //    supplementary_agreement_id VARCHAR(50),
+                    agreement.setArrangementType(one.arrangementType); //    arrangement_type VARCHAR(50),
+                    agreement.setShedulerJobID(one.shedulerJobId); //    sheduler_job_id BIGINT,
+                    agreement.setNumber(one.number); //    number VARCHAR(50),
+                    agreement.setOpeningDate(one.openingDate); //    opening_date TIMESTAMP,
+                    agreement.setClosingDate(one.closingDate); //    closing_date TIMESTAMP,
+                    agreement.setCancelDate(one.cancelDate); //    cancel_date TIMESTAMP,
+                    agreement.setValidityDuration(one.validityDuration); //    validity_duration BIGINT,
+                    agreement.setCancellationReason(one.cancellationReason); //    cancellation_reason VARCHAR(100),
+                    agreement.setStatus(one.status); //    status VARCHAR(50),
+                    agreement.setInterestCalculationDate(one.interestCalculationDate); //    interest_calculation_date TIMESTAMP,
+                    agreement.setInterestRate(one.interestRate); //    interest_rate DECIMAL,
+                    agreement.setCoefficient(one.coefficient); //    coefficient DECIMAL,
+                    agreement.setCoefficientAction(one.coefficientAction); //    coefficient_action VARCHAR(50),
+                    agreement.setMinimumInterestRate(one.minimumInterestRate); //    minimum_interest_rate DECIMAL,
+                    agreement.setMinimumInterestRateCoefficient(one.maximalnterestRateCoefficient); //    minimum_interest_rate_coefficient DECIMAL,
+                    agreement.setMinimumInterestRateCoefficientAction(one.minimumInterestRateCoefficientAction); //    minimum_interest_rate_coefficient_action VARCHAR(50),
+                    agreement.setMaximalInterestRate(one.maximalnterestRate); //    maximal_interest_rate DECIMAL,
+                    agreement.setMaximalInterestRateCoefficient(one.maximalnterestRateCoefficient); //    maximal_interest_rate_coefficient DECIMAL,
+                    agreement.setMaximalInterestRateCoefficientAction(one.maximalnterestRateCoefficientAction); //    maximal_interest_rate_coefficient_action VARCHAR(50)
 
+                    session.persist(agreement);
+                    session.getTransaction().commit();
+                    break;
+                }
+            }
             //Выполняется отправка данных в систему-источник запроса на создание Экземпляра продукта
-//            List<TppProductRegister> tpr = session.createQuery(
-//                            "FROM TppProductRegister WHERE state<>200", TppProductRegister.class)
-//                    .getResultList();
-//            List<Agreement> ag = session.createQuery(
-//                            "FROM Agreement WHERE status<>200", Agreement.class)
-//                    .getResultList();
             String strResponse = "{\n" +
                     "\"data\": {\n" +
                     "\"instanceId\": \"" + inst.instanceId + "\",\n" +
-                    "\"registerId\": [\n";
-            AtomicReference<String> str= new AtomicReference<>("");
+                    "\"registerId\": [";
+            str.set("");
             session.createQuery(
-                            "FROM TppProductRegister WHERE state<>'1'", TppProductRegister.class)
-                    .getResultList();//.forEach(x-> str.updateAndGet(v -> v + "\""+x.getId().toString()+"\","));
-            strResponse += str.get();
-            strResponse += "\n" +
-            "],\n" +
-                    "\"supplementaryAgreementId\": [\n";
+                            "FROM TppProductRegister WHERE state='1'", TppProductRegister.class)
+                    .getResultList().forEach(x -> str.updateAndGet(v -> v + ",\"" + x.getId().toString() + "\""));
+            strTemp = str.get();
+            if (!(strTemp == "")) {
+                strTemp = strTemp.substring(1);
+            }
+            strResponse += strTemp;
+
+            strResponse += "],\n" +
+                    "\"supplementaryAgreementId\": [";
             str.set("");
             session.createQuery(
                             "FROM Agreement WHERE status<>'200'", Agreement.class)
-                    .getResultList().forEach(x-> str.updateAndGet(v -> v + "\""+x.getId()+"\","));
-            strResponse += "\n" +
-            "]\n" +
+                    .getResultList().forEach(x -> str.updateAndGet(v -> v + ",\"" + x.getId() + "\""));
+            strTemp = str.get();
+            if (!(strTemp == "")) {
+                strTemp = strTemp.substring(1);
+            }
+            strResponse += strTemp;
+
+            strResponse += "]\n" +
                     "}\n" +
                     "}\n";
 

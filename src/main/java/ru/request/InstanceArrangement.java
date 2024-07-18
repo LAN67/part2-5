@@ -11,12 +11,12 @@ public class InstanceArrangement {
     public String generalAgreementId; // -ID доп.Ген.соглашения ID доп.Ген.соглашения
     public String supplementaryAgreementId; // -ID доп.соглашения ID доп.соглашения
     public String arrangementType; // -Тип соглашения Enum, НСО/ЕЖО/СМО/ДБДС и тд, см. актуальную ЛМД
-    public Integer shedulerJobId; // -Идентификатор периодичности учета Идентификатор задания/расписанияпериодичность учета/расчета/выплаты. sequence фиксируется в поле name
+    public Long shedulerJobId; // -Идентификатор периодичности учета Идентификатор задания/расписанияпериодичность учета/расчета/выплаты. sequence фиксируется в поле name
     public String number; // +Номер ДС Номер ДС
     public Date openingDate; // +Дата начала сделки Дата заключения сделки (НСО/ЕЖО/СМО/ДБДС)
     public Date closingDate; // -Дата окончания сделки
     public Date cancelDate; // -Дата отзыва сделки
-    public Integer validityDuration; // -Срок действия сделки
+    public Long validityDuration; // -Срок действия сделки
     public String cancellationReason; // -Причина расторжения
     public String status; // -Состояние/статус Статус ДС: закрыт, открыт
     public Date interestCalculationDate; // -Начисление начинается с (дата) Начисление начинается с (дата)
