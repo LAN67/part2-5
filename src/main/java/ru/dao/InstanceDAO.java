@@ -212,6 +212,5 @@ public class InstanceDAO {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(strResponse);
         }
-        //return null;
     }
 }
