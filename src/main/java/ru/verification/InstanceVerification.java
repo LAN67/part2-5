@@ -8,7 +8,7 @@ import ru.request.InstanceArrangement;
 import ru.request.RequestAccount;
 import ru.request.RequestInstance;
 
-// @Service  @Autowired ??? '@Autowired' not applicable to local variable
+@Service
 public class InstanceVerification {
     public ResponseEntity<String> verification(RequestInstance inst) {
         if (inst.productType == null)
@@ -48,7 +48,8 @@ public class InstanceVerification {
     private ResponseEntity<String> createResponse(String name) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.TEXT_PLAIN)
+//                .contentType(MediaType.TEXT_PLAIN)
+                .header("Accept-Language:\"ru-ru,ru\"")
                 .body("Имя обязательного параметра " + name + " не заполнено.");
     }
 }

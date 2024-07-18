@@ -4,9 +4,11 @@ import jakarta.persistence.Column;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import ru.models.*;
 import ru.request.InstanceArrangement;
 import ru.request.RequestInstance;
@@ -15,11 +17,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Service
 public class InstanceDAO {
+    @Autowired
+    FindAccountNumber findAccountNumber;
 
     public ResponseEntity<String> createProduct(RequestInstance inst) {
         List<TppRefProductClass> productClass;
-        FindAccountNumber findAccountNumber = new FindAccountNumber();
         List<TppProduct> product;
         AtomicReference<String> str = new AtomicReference<>("");
         String strTemp;
@@ -41,7 +45,8 @@ public class InstanceDAO {
                 for (TppProduct one : pr) {
                     return ResponseEntity
                             .status(HttpStatus.BAD_REQUEST)
-                            .contentType(MediaType.TEXT_PLAIN)
+//                            .contentType(MediaType.TEXT_PLAIN)
+                            .header("Accept-Language:\"ru-ru,ru\"")
                             .body("Параметр ContractNumber № договора '" + inst.contractNumber + "' уже существует для ЭП с ИД  " + one.getId() + ".");
                 }
             }
@@ -54,7 +59,8 @@ public class InstanceDAO {
                 if (!agree.isEmpty()) {
                     return ResponseEntity
                             .status(HttpStatus.BAD_REQUEST)
-                            .contentType(MediaType.TEXT_PLAIN)
+//                            .contentType(MediaType.TEXT_PLAIN)
+                            .header("Accept-Language:\"ru-ru,ru\"")
                             .body("Параметр № Дополнительного соглашения (сделки) Number '" + one.number + "' уже существует для ЭП с ИД  " + inst.instanceId + ".");
                 }
             }
@@ -65,7 +71,8 @@ public class InstanceDAO {
             if (productClass.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .contentType(MediaType.TEXT_PLAIN)
+//                        .contentType(MediaType.TEXT_PLAIN)
+                        .header("Accept-Language:\"ru-ru,ru\"")
                         .body("КодПродукта '" + inst.productCode + "' не найдено в Каталоге продуктов tpp_ref_product_class");
             }
 
@@ -100,7 +107,8 @@ public class InstanceDAO {
                     if (newAcc == null) {
                         return ResponseEntity
                                 .status(HttpStatus.NOT_FOUND)
-                                .contentType(MediaType.TEXT_PLAIN)
+//                                .contentType(MediaType.TEXT_PLAIN)
+                                .header("Accept-Language:\"ru-ru,ru\"")
                                 .body("Счет не найден. branchCode='" + inst.branchCode + "' and currencyCode='" + inst.isoCurrencyCode + "' and mdmCode='" + inst.mdmCode + "' and priorityCode='00' and registryTypeCode='" + one2.getValue() + "'");
                     }
                     session.beginTransaction();
@@ -125,7 +133,8 @@ public class InstanceDAO {
             if (product.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .contentType(MediaType.TEXT_PLAIN)
+//                        .contentType(MediaType.TEXT_PLAIN)
+                        .header("Accept-Language:\"ru-ru,ru\"")
                         .body("Экземпляр продукта с параметром instanceId " + inst.instanceId + " не найден.");
             }
 
@@ -137,7 +146,8 @@ public class InstanceDAO {
                 for (Agreement oneAG : ag) {
                     return ResponseEntity
                             .status(HttpStatus.BAD_REQUEST)
-                            .contentType(MediaType.TEXT_PLAIN)
+//                            .contentType(MediaType.TEXT_PLAIN)
+                            .header("Accept-Language:\"ru-ru,ru\"")
                             .body("Параметр № Дополнительного соглашения (сделки) Number '" + one.number + "' уже существует для ЭП с ИД " + oneAG.getId() + ".");
                 }
             }

@@ -1,11 +1,11 @@
 package ru.verification;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import ru.request.RequestAccount;
 
-// @Service ?? '@Autowired' not applicable to local variable
+@Service
 public class AccountVerification {
     public ResponseEntity<String> verification(RequestAccount acc){
         if(acc.instanceId == null)
@@ -18,7 +18,7 @@ public class AccountVerification {
     private ResponseEntity<String> createResponse(String name){
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.TEXT_PLAIN)
+                .header("Accept-Language:\"ru-ru,ru\"")
                 .body("Имя обязательного параметра " + name + " не заполнено.");
     }
 }

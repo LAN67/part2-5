@@ -1,5 +1,8 @@
 package ru.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,13 +14,14 @@ import ru.verification.AccountVerification;
 
 @RestController
 public class AccountController {
+    @Autowired
+    AccountVerification accountVerification;
+    @Autowired
+    AccountDAO accountDAO;
 
     @GetMapping("/corporate-settlement-account/create")
     public ResponseEntity<String> create(@RequestBody RequestAccount acc) {
         ResponseEntity<String> response;
-//        @Autowired ??? '@Autowired' not applicable to local variable
-        AccountVerification accountVerification = new AccountVerification();
-        AccountDAO accountDAO = new AccountDAO();
 
         //Шаг 1. Проверка Request.Body на обязательность.
         response = accountVerification.verification(acc);

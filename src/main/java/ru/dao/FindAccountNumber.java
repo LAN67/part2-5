@@ -3,10 +3,12 @@ package ru.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Service;
 import ru.models.*;
 
 import java.util.List;
 
+@Service
 public class FindAccountNumber {
 
     public Account get(String branchCode, String currencyCode, String mdmCode, String priorityCode, String registryTypeCode) {

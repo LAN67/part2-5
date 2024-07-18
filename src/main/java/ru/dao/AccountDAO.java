@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import ru.models.*;
 import ru.request.RequestAccount;
 
 import java.util.List;
 
+@Service
 public class AccountDAO {
+    @Autowired
+    FindAccountNumber findAccountNumber;
 
     public ResponseEntity<String> check(RequestAccount acc) {
 
@@ -28,7 +32,8 @@ public class AccountDAO {
             if (!pr.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .contentType(MediaType.TEXT_PLAIN)
+//                        .contentType(MediaType.TEXT_PLAIN)
+                        .header("Accept-Language:\"ru-ru,ru\"")
                         .body("Параметр registryTypeCode тип регистра " + acc.registryTypeCode + " уже существует для ЭП с ИД  " + acc.instanceId + ".");
             }
             return null;
@@ -39,7 +44,6 @@ public class AccountDAO {
         List<TppRefProductRegisterType> productRegisterType;
         TppProductRegister tppProductRegister;
         Long accountId = null;
-        FindAccountNumber findAccountNumber = new FindAccountNumber();
 
         Configuration configuration = new Configuration()
                 .addAnnotatedClass(TppRefProductRegisterType.class)
@@ -59,7 +63,8 @@ public class AccountDAO {
             if (productRegisterType.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .contentType(MediaType.TEXT_PLAIN)
+//                        .contentType(MediaType.TEXT_PLAIN)
+                        .header("Accept-Language:\"ru-ru,ru\"")
                         .body("Код Продукта '" + acc.registryTypeCode + "' не найдено в Каталоге продуктов " + configuration.getProperty("hibernate.connection.username") + ".tpp_ref_product_register_type для данного типа Регистра.");
             }
             //Шаг 4. Найти значение номера счета по параметрам branchCode, currencyCode, mdmCode, priorityCode, registryTypeCode
@@ -95,7 +100,8 @@ public class AccountDAO {
         if (accountId == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .contentType(MediaType.TEXT_PLAIN)
+//                    .contentType(MediaType.TEXT_PLAIN)
+                    .header("Accept-Language:\"ru-ru,ru\"")
                     .body("Счет не найден. branchCode='" + acc.branchCode + "' and currencyCode='" + acc.currencyCode + "' and mdmCode='" + acc.mdmCode + "' and priorityCode='" + acc.priorityCode + "' and registryTypeCode='" + acc.registryTypeCode + "'");
         } else {
             return ResponseEntity

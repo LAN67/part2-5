@@ -1,5 +1,6 @@
 package ru.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,14 +13,15 @@ import ru.verification.InstanceVerification;
 
 @RestController
 public class InstanceController {
+    @Autowired
+    InstanceVerification instanceVerification;
+    @Autowired
+    InstanceDAO instanceDAO;
 
 
     @GetMapping("/corporate-settlement-instance/create")
     public ResponseEntity<String> create(@RequestBody RequestInstance inst) {
         ResponseEntity<String> response;
-//        @Autowired ??? '@Autowired' not applicable to local variable
-        InstanceVerification instanceVerification = new InstanceVerification();
-        InstanceDAO instanceDAO = new InstanceDAO();
 
         //Шаг 1. Проверка Request.Body на обязательность.
         response = instanceVerification.verification(inst);
